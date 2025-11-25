@@ -45,6 +45,9 @@ const (
 	otlpProtoTrace  encoding = iota
 	otlpProtoMetric          = iota
 	otlpProtoLog             = iota
+	otlpJSONTrace            = iota
+	otlpJSONMetric           = iota
+	otlpJSONLog              = iota
 )
 
 type compression int
@@ -73,6 +76,33 @@ func (ex *pubsubExporter) start(ctx context.Context, _ component.Host) error {
 		ex.client = client
 	}
 	return nil
+}
+
+func (ex *pubsubExporter) getEncodingType(signalType string) (encoding, error) {
+	// Determine if we're using JSON or Proto based on the marshaler type
+	encodingConfig, _ := ex.config.parseEncoding()
+	isJSON := encodingConfig == "otlp_json"
+
+	if isJSON {
+		switch signalType {
+		case "traces":
+			return otlpJSONTrace, nil
+		case "metrics":
+			return otlpJSONMetric, nil
+		case "logs":
+			return otlpJSONLog, nil
+		}
+	} else {
+		switch signalType {
+		case "traces":
+			return otlpProtoTrace, nil
+		case "metrics":
+			return otlpProtoMetric, nil
+		case "logs":
+			return otlpProtoLog, nil
+		}
+	}
+	return 0, fmt.Errorf("unknown signal type: %s", signalType)
 }
 
 func (ex *pubsubExporter) shutdown(_ context.Context) error {
@@ -111,6 +141,15 @@ func (ex *pubsubExporter) getMessageAttributes(encoding encoding, watermark time
 	case otlpProtoLog:
 		attributes["ce-type"] = "org.opentelemetry.otlp.logs.v1"
 		attributes["content-type"] = "application/protobuf"
+	case otlpJSONTrace:
+		attributes["ce-type"] = "org.opentelemetry.otlp.traces.v1"
+		attributes["content-type"] = "application/json"
+	case otlpJSONMetric:
+		attributes["ce-type"] = "org.opentelemetry.otlp.metrics.v1"
+		attributes["content-type"] = "application/json"
+	case otlpJSONLog:
+		attributes["ce-type"] = "org.opentelemetry.otlp.logs.v1"
+		attributes["content-type"] = "application/json"
 	}
 	if ex.ceCompression == gZip {
 		attributes["content-encoding"] = "gzip"
@@ -160,7 +199,11 @@ func (ex *pubsubExporter) consumeTraces(ctx context.Context, traces ptrace.Trace
 
 func (ex *pubsubExporter) publishTraces(ctx context.Context, tracesForKey ptrace.Traces, orderingKey string) error {
 	watermark := ex.tracesWatermarkFunc(tracesForKey, time.Now(), ex.config.Watermark.AllowedDrift).UTC()
-	attributes, attributesErr := ex.getMessageAttributes(otlpProtoTrace, watermark)
+	encodingType, err := ex.getEncodingType("traces")
+	if err != nil {
+		return fmt.Errorf("error while determining encoding type: %w", err)
+	}
+	attributes, attributesErr := ex.getMessageAttributes(encodingType, watermark)
 	if attributesErr != nil {
 		return fmt.Errorf("error while preparing pubsub message attributes: %w", attributesErr)
 	}
@@ -215,7 +258,11 @@ func (ex *pubsubExporter) consumeMetrics(ctx context.Context, metrics pmetric.Me
 
 func (ex *pubsubExporter) publishMetrics(ctx context.Context, metricsForKey pmetric.Metrics, orderingKey string) error {
 	watermark := ex.metricsWatermarkFunc(metricsForKey, time.Now(), ex.config.Watermark.AllowedDrift).UTC()
-	attributes, attributesErr := ex.getMessageAttributes(otlpProtoMetric, watermark)
+	encodingType, err := ex.getEncodingType("metrics")
+	if err != nil {
+		return fmt.Errorf("error while determining encoding type: %w", err)
+	}
+	attributes, attributesErr := ex.getMessageAttributes(encodingType, watermark)
 	if attributesErr != nil {
 		return fmt.Errorf("error while preparing pubsub message attributes: %w", attributesErr)
 	}
@@ -272,7 +319,11 @@ func (ex *pubsubExporter) consumeLogs(ctx context.Context, logs plog.Logs) error
 
 func (ex *pubsubExporter) publishLogs(ctx context.Context, logs plog.Logs, orderingKey string) error {
 	watermark := ex.logsWatermarkFunc(logs, time.Now(), ex.config.Watermark.AllowedDrift).UTC()
-	attributes, attributesErr := ex.getMessageAttributes(otlpProtoLog, watermark)
+	encodingType, err := ex.getEncodingType("logs")
+	if err != nil {
+		return fmt.Errorf("error while determining encoding type: %w", err)
+	}
+	attributes, attributesErr := ex.getMessageAttributes(encodingType, watermark)
 	if attributesErr != nil {
 		return fmt.Errorf("error while preparing pubsub message attributes: %w", attributesErr)
 	}

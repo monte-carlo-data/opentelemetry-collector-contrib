@@ -32,6 +32,8 @@ type Config struct {
 
 	// The fully qualified resource name of the Pubsub topic
 	Topic string `mapstructure:"topic"`
+	// Encoding of the payload (otlp_proto or otlp_json, default is otlp_proto)
+	Encoding string `mapstructure:"encoding"`
 	// Compression of the payload (only gzip or is supported, no compression is the default)
 	Compression string `mapstructure:"compression"`
 	// Watermark defines the watermark (the ce-time attribute on the message) behavior
@@ -65,6 +67,9 @@ func (config *Config) Validate() error {
 	if !topicMatcher.MatchString(config.Topic) {
 		errors = multierr.Append(errors, fmt.Errorf("topic '%s' is not a valid format, use 'projects/<project_id>/topics/<name>'", config.Topic))
 	}
+	if _, err := config.parseEncoding(); err != nil {
+		errors = multierr.Append(errors, err)
+	}
 	if _, err := config.parseCompression(); err != nil {
 		errors = multierr.Append(errors, err)
 	}
@@ -86,6 +91,16 @@ func (cfg *OrderingConfig) validate() error {
 		return errors.New("'from_resource_attribute' is required if ordering is enabled")
 	}
 	return nil
+}
+
+func (config *Config) parseEncoding() (string, error) {
+	switch config.Encoding {
+	case "otlp_proto", "":
+		return "otlp_proto", nil
+	case "otlp_json":
+		return "otlp_json", nil
+	}
+	return "", fmt.Errorf("encoding %v is not supported. supported encodings include [otlp_proto, otlp_json]", config.Encoding)
 }
 
 func (config *Config) parseCompression() (compression, error) {

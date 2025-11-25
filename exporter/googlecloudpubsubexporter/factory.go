@@ -44,14 +44,34 @@ func ensureExporter(params exporter.Settings, pCfg *Config) *pubsubExporter {
 	if exp != nil {
 		return exp
 	}
+
+	// we ignore the error here as the config is already validated with the same method
+	encoding, _ := pCfg.parseEncoding()
+
+	// Set marshalers based on encoding configuration
+	var tracesMarshaler ptrace.Marshaler
+	var metricsMarshaler pmetric.Marshaler
+	var logsMarshaler plog.Marshaler
+
+	switch encoding {
+	case "otlp_json":
+		tracesMarshaler = &ptrace.JSONMarshaler{}
+		metricsMarshaler = &pmetric.JSONMarshaler{}
+		logsMarshaler = &plog.JSONMarshaler{}
+	default: // "otlp_proto"
+		tracesMarshaler = &ptrace.ProtoMarshaler{}
+		metricsMarshaler = &pmetric.ProtoMarshaler{}
+		logsMarshaler = &plog.ProtoMarshaler{}
+	}
+
 	exp = &pubsubExporter{
 		logger:           params.Logger,
 		userAgent:        strings.ReplaceAll(pCfg.UserAgent, "{{version}}", params.BuildInfo.Version),
 		ceSource:         fmt.Sprintf("/opentelemetry/collector/%s/%s", metadata.Type.String(), params.BuildInfo.Version),
 		config:           pCfg,
-		tracesMarshaler:  &ptrace.ProtoMarshaler{},
-		metricsMarshaler: &pmetric.ProtoMarshaler{},
-		logsMarshaler:    &plog.ProtoMarshaler{},
+		tracesMarshaler:  tracesMarshaler,
+		metricsMarshaler: metricsMarshaler,
+		logsMarshaler:    logsMarshaler,
 		makeUUID:         uuid.NewRandom,
 		makeClient:       newPublisherClient,
 	}
@@ -77,6 +97,7 @@ func createDefaultConfig() component.Config {
 	return &Config{
 		UserAgent:       "opentelemetry-collector-contrib {{version}}",
 		TimeoutSettings: exporterhelper.TimeoutConfig{Timeout: defaultTimeout},
+		Encoding:        "otlp_proto",
 		Watermark: WatermarkConfig{
 			Behavior:     "current",
 			AllowedDrift: 0,

@@ -114,3 +114,46 @@ func TestOrderConfigValidation(t *testing.T) {
 	c.Ordering.FromResourceAttribute = "key"
 	assert.NoError(t, c.Validate())
 }
+
+func TestEncodingConfigValidation(t *testing.T) {
+	factory := NewFactory()
+	c := factory.CreateDefaultConfig().(*Config)
+	c.Topic = "projects/my-project/topics/my-topic"
+
+	// Default encoding should be otlp_proto
+	assert.Equal(t, "otlp_proto", c.Encoding)
+	assert.NoError(t, c.Validate())
+
+	// Empty encoding should default to otlp_proto
+	c.Encoding = ""
+	assert.NoError(t, c.Validate())
+	encoding, err := c.parseEncoding()
+	assert.NoError(t, err)
+	assert.Equal(t, "otlp_proto", encoding)
+
+	// otlp_proto should be valid
+	c.Encoding = "otlp_proto"
+	assert.NoError(t, c.Validate())
+	encoding, err = c.parseEncoding()
+	assert.NoError(t, err)
+	assert.Equal(t, "otlp_proto", encoding)
+
+	// otlp_json should be valid
+	c.Encoding = "otlp_json"
+	assert.NoError(t, c.Validate())
+	encoding, err = c.parseEncoding()
+	assert.NoError(t, err)
+	assert.Equal(t, "otlp_json", encoding)
+
+	// Invalid encoding should error
+	c.Encoding = "invalid"
+	assert.Error(t, c.Validate())
+	_, err = c.parseEncoding()
+	assert.Error(t, err)
+
+	// Other invalid encodings
+	c.Encoding = "json"
+	assert.Error(t, c.Validate())
+	c.Encoding = "proto"
+	assert.Error(t, c.Validate())
+}

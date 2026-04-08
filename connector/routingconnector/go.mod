@@ -19,13 +19,13 @@ require (
 	go.opentelemetry.io/collector/pipeline v1.46.1-0.20251120204106-2e9c82787618
 	go.uber.org/goleak v1.3.0
 	go.uber.org/zap v1.27.1
-	google.golang.org/grpc v1.77.0
+	google.golang.org/grpc v1.79.3
 )
 
 require (
 	github.com/alecthomas/participle/v2 v2.1.4 // indirect
 	github.com/antchfx/xmlquery v1.5.0 // indirect
-	github.com/antchfx/xpath v1.3.5 // indirect
+	github.com/antchfx/xpath v1.3.6 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/elastic/go-grok v0.3.1 // indirect
@@ -63,17 +63,17 @@ require (
 	go.opentelemetry.io/collector/internal/fanoutconsumer v0.140.1-0.20251120204106-2e9c82787618 // indirect
 	go.opentelemetry.io/collector/pdata/pprofile v0.140.1-0.20251120204106-2e9c82787618 // indirect
 	go.opentelemetry.io/collector/pipeline/xpipeline v0.140.1-0.20251120204106-2e9c82787618 // indirect
-	go.opentelemetry.io/otel v1.38.0 // indirect
-	go.opentelemetry.io/otel/metric v1.38.0 // indirect
-	go.opentelemetry.io/otel/sdk v1.38.0 // indirect
-	go.opentelemetry.io/otel/sdk/metric v1.38.0 // indirect
-	go.opentelemetry.io/otel/trace v1.38.0 // indirect
+	go.opentelemetry.io/otel v1.39.0 // indirect
+	go.opentelemetry.io/otel/metric v1.39.0 // indirect
+	go.opentelemetry.io/otel/sdk v1.39.0 // indirect
+	go.opentelemetry.io/otel/sdk/metric v1.39.0 // indirect
+	go.opentelemetry.io/otel/trace v1.39.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.yaml.in/yaml/v3 v3.0.4 // indirect
 	golang.org/x/exp v0.0.0-20240506185415-9bf2ced13842 // indirect
-	golang.org/x/net v0.46.1-0.20251013234738-63d1a5100f82 // indirect
-	golang.org/x/sys v0.38.0 // indirect
-	golang.org/x/text v0.31.0 // indirect
+	golang.org/x/net v0.48.0 // indirect
+	golang.org/x/sys v0.39.0 // indirect
+	golang.org/x/text v0.32.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

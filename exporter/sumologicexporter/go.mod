@@ -22,10 +22,10 @@ require (
 	go.opentelemetry.io/collector/exporter/exportertest v0.140.1-0.20251120204106-2e9c82787618
 	go.opentelemetry.io/collector/pdata v1.46.1-0.20251120204106-2e9c82787618
 	go.opentelemetry.io/collector/pipeline v1.46.1-0.20251120204106-2e9c82787618
-	go.opentelemetry.io/otel v1.38.0
-	go.opentelemetry.io/otel/metric v1.38.0
+	go.opentelemetry.io/otel v1.41.0
+	go.opentelemetry.io/otel/metric v1.41.0
 	go.opentelemetry.io/otel/sdk/metric v1.38.0
-	go.opentelemetry.io/otel/trace v1.38.0
+	go.opentelemetry.io/otel/trace v1.41.0
 	go.uber.org/goleak v1.3.0
 	go.uber.org/zap v1.27.1
 	golang.org/x/exp v0.0.0-20240506185415-9bf2ced13842
@@ -35,6 +35,7 @@ require (
 	github.com/Showmax/go-fqdn v1.0.0 // indirect
 	github.com/cenkalti/backoff/v4 v4.3.0 // indirect
 	github.com/cenkalti/backoff/v5 v5.0.3 // indirect
+	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/ebitengine/purego v0.9.0 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect

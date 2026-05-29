@@ -1,6 +1,6 @@
 module github.com/open-telemetry/opentelemetry-collector-contrib/exporter/elasticsearchexporter/integrationtest
 
-go 1.24.0
+go 1.25
 
 require (
 	github.com/elastic/go-docappender/v2 v2.11.3
@@ -39,7 +39,7 @@ require (
 	github.com/antchfx/xmlquery v1.5.0 // indirect
 	github.com/antchfx/xpath v1.3.5 // indirect
 	github.com/apache/arrow-go/v18 v18.2.0 // indirect
-	github.com/apache/thrift v0.22.0 // indirect
+	github.com/apache/thrift v0.23.0 // indirect
 	github.com/armon/go-radix v1.0.0 // indirect
 	github.com/axiomhq/hyperloglog v0.2.5 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
@@ -216,7 +216,7 @@ require (
 	go.opentelemetry.io/contrib/propagators/b3 v1.38.0 // indirect
 	go.opentelemetry.io/contrib/zpages v0.63.0 // indirect
 	go.opentelemetry.io/ebpf-profiler v0.0.202547 // indirect
-	go.opentelemetry.io/otel v1.38.0 // indirect
+	go.opentelemetry.io/otel v1.41.0 // indirect
 	go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploggrpc v0.14.0 // indirect
 	go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploghttp v0.14.0 // indirect
 	go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetricgrpc v1.38.0 // indirect
@@ -229,11 +229,11 @@ require (
 	go.opentelemetry.io/otel/exporters/stdout/stdoutmetric v1.38.0 // indirect
 	go.opentelemetry.io/otel/exporters/stdout/stdouttrace v1.38.0 // indirect
 	go.opentelemetry.io/otel/log v0.14.0 // indirect
-	go.opentelemetry.io/otel/metric v1.38.0 // indirect
+	go.opentelemetry.io/otel/metric v1.41.0 // indirect
 	go.opentelemetry.io/otel/sdk v1.38.0 // indirect
 	go.opentelemetry.io/otel/sdk/log v0.14.0 // indirect
 	go.opentelemetry.io/otel/sdk/metric v1.38.0 // indirect
-	go.opentelemetry.io/otel/trace v1.38.0 // indirect
+	go.opentelemetry.io/otel/trace v1.41.0 // indirect
 	go.opentelemetry.io/proto/otlp v1.7.1 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.yaml.in/yaml/v2 v2.4.3 // indirect
